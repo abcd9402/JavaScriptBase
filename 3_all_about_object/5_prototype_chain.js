@@ -118,5 +118,48 @@ console.log(yuJin4.sayHello());   //안녕하세요. 저는 prototype 매서드�
 
 
 
+/*
+    getPrototypeOf, setPrototypeOf
+
+    인스턴스의 __proto__변경  vs   함수의 prototype 변경
+*/
+
+function IdolModel(name,year){
+    this.name=name;
+    this.year=year;
+};
+IdolModel.prototype.sayHello = function(){
+    return `${this.name} 인사를 합니다.`;
+}
+function FemaleIdolModel(name,year){
+    this.name=name;
+    this.year=year;
+
+    this.dance = function(){
+        return `${this.name}이 춤을 춥니다.`;
+    }
+};
+
+const gaEul = new IdolModel('가을',2004);
+const ray = new FemaleIdolModel('레이',2004);
+console.log(gaEul.__proto__);   //sayHello
+console.log(gaEul.__proto__ === IdolModel.prototype); //true
+console.log(Object.getPrototypeOf(gaEul) === IdolModel.prototype);  //true    =>   Object.getPrototypeOf(gaEul) === gaEul.__proto__
+
+console.log(gaEul.sayHello());
+console.log(ray.dance());
+console.log(Object.getPrototypeOf(ray)) // FemalIdolModel.prototype
+//console.log(ray.sayHello());  //에러
+
+console.log(ray.constructor);   //FemaleIdolModel
+Object.setPrototypeOf(ray,IdolModel.prototype);  // (함수,바꿀 프로토타입)   -> 상속체인을 변경
+console.log(ray.constructor);   //IdolModel   ->   FemalIdolModel에서 IdolModel로 변경
+
+console.log(ray.sayHello());
 
 
+FemaleIdolModel.prototype = IdolModel.prototype;
+
+const eSeo = new FemaleIdolModel('이서',2007);
+console.log(Object.getPrototypeOf(eSeo) === IdolModel.prototype); //true
+console.log(IdolModel.prototype === FemaleIdolModel.prototype); //true
